@@ -1,40 +1,38 @@
-import React, { Component } from 'react';
+import React, { useState} from 'react';
 import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 import {Form, Label, InputForm, ButtonAdd} from './ContactForm.styled'
-export class ContactForm extends Component {
-  state = {
-    name: '',
-    number: ''
- }
+export const ContactForm = ({onAddContact}) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  handleInputChange = event => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  }
+  const handleChangeName = event => {
+    setName(event.target.value);
+  };
 
-  handleSubmit = event => {
+  const handleChangeNumber = event => {
+    setNumber(event.target.value);
+  };
+
+  const handleSubmit = event => {
     event.preventDefault();
     const contact = {
       id: nanoid(),
-      name: this.state.name,
-      number: this.state.number,
+      name,
+      number,
     };
-    this.props.onAddContact(contact);
-    this.resetForm()
+    onAddContact(contact);
+    resetForm()
   }
 
-  resetForm = () => {
-    this.setState({
-      name: '',
-      number: '',
-    });
+ const resetForm = () => {
+    setName('');
+   setNumber('');
   };
-  render() {
-  const { name, number } = this.state;
+
     return (
       <>
-        <Form onSubmit={this.handleSubmit} >
+        <Form onSubmit={handleSubmit} >
           <Label >
             <InputForm
               type="text"
@@ -43,7 +41,7 @@ export class ContactForm extends Component {
               title="Name may contain only letters, apostrophe, dash, and spaces. For example: Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
               required
               value={name}
-              onChange={this.handleInputChange}
+              onChange={handleChangeName}
             /> Name
           </Label>
           <Label >
@@ -54,7 +52,7 @@ export class ContactForm extends Component {
               title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
               required
               value={number}
-              onChange={this.handleInputChange}
+              onChange={handleChangeNumber}
             /> Number
           </Label>
 
@@ -64,7 +62,7 @@ export class ContactForm extends Component {
         </Form>
       </>
     )
- }
+
 }
 
 ContactForm.propTypes = {
