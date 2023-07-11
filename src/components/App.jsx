@@ -7,8 +7,15 @@ import initialContactsData from '../contacts.json';
 
 export const App = () => {
   const [contacts, setContacts] = useState(
-    () => JSON.parse(localStorage.getItem('contacts')) ?? initialContactsData
-  );
+  () => {
+    const localStorageContacts = JSON.parse(localStorage.getItem('contacts'))
+    if (localStorageContacts && localStorageContacts.length > 0) {
+      return localStorageContacts
+    } else {
+      return initialContactsData
+    }
+  }
+);
   const [filter, setFilter] = useState('')
 
 
@@ -30,16 +37,6 @@ export const App = () => {
   const handleFilterByName = event => {
     setFilter(event.target.value.toLowerCase());
   }
-
-  useEffect (() => {
-    const stringifyContacts = localStorage.getItem('contacts');
-    const localStorageContacts = JSON.parse(stringifyContacts);
-    if (localStorageContacts && localStorageContacts.length > 0) {
-      setContacts(localStorageContacts)
-    } else {
-      setContacts(initialContactsData)
-    }
-  }, [])
 
   useEffect (() => {
     localStorage.setItem('contacts', JSON.stringify(contacts))
